@@ -1,0 +1,17 @@
+nc -vz 172.28.218.152 9092 - ensuring zerotier network is connected
+bin/zookeeper-server-start.sh config/zookeeper.properties-starts zookeeper
+cd /opt/kafka
+nano /opt/kafka/config/server.properties
+listeners=PLAINTEXT://0.0.0.0:9092
+advertised.listeners=PLAINTEXT://172.28.218.152:9092
+ADD THESE 2 LINES 
+bin/kafka-server-start.sh config/server.properties - starts kafka
+
+Create the topics
+bin/kafka-topics.sh --create --topic tasks --bootstrap-server 172.28.218.152:9092 --partitions 2 --replication-factor 1
+bin/kafka-topics.sh --create --topic results --bootstrap-server 172.28.218.152:9092 --partitions 2 --replication-factor 1
+bin/kafka-topics.sh --create --topic heartbeats --bootstrap-server 172.28.218.152:9092 --partitions 2 --replication-factor 1
+
+Confirming created topics
+bin/kafka-topics.sh --list --bootstrap-server 172.28.218.152:9092
+
